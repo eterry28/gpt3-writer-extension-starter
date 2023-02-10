@@ -10,19 +10,21 @@ const getKey = () => {
 }
 
 const sendMessage = (content) => {
-    chrome.tabs.query({ active: true, currentWindow: true}, (tabs) => {
-        const activeTab = tabs[0].id;
-        chrome.tabs.sendMessage(
-            activeTab,
-            { message: 'inject', content },
-            (response) => {
-                if(response.status === 'failed'){
-                    console.log('injection failed.');
-                }
-            }
-        );
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+      const activeTab = tabs[0].id;
+  
+      console.log('sendMessage.');
+      chrome.tabs.sendMessage(        
+        activeTab,
+        { message: 'inject', content },
+        (response) => {
+          if (response.status && response.status === 'failed') {
+            console.log('injection failed.');
+          }
+        }
+      );
     });
-};
+  };
 
 
 const generate = async (prompt) => {
@@ -69,7 +71,7 @@ const generateCompletionAction = async (info) => {
             `;
         const secondPromptCompletion = await generate(secondPrompt);
         
-        console.log(secondPromptCompletion.text);
+        //console.log(secondPromptCompletion.text);
     } catch (error) {
         console.log(error);
         sendMessage(error.toString());
